@@ -21,6 +21,6 @@ class PostForm(forms.ModelForm):
         widgets = {
             'content': forms.TextInput(attrs={'data-test': 'post'})
         }
-    
+
     def clean(self):
         super().clean()
