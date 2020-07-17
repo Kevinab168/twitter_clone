@@ -58,6 +58,5 @@ def test_make_comment(driver, live_server, login_user, user_factory, post_factor
     submit_comment.click()
     assert 'Sample1' in driver.page_source
     recent_comment = Comment.objects.all().last()
-    post_of_comment = Post.objects.get(pk=1)
     assert recent_comment.user == user
-    assert recent_comment.post == post_of_comment
+    assert recent_comment.post
