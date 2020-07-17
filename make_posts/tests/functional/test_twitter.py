@@ -40,7 +40,6 @@ def test_make_post(driver, login_user, live_server, user_factory):
     post_it = driver.find_element_by_css_selector('[data-test="make-post"]')
     post_it.click()
     assert 'Sample Post' in driver.page_source
-    assert driver.current_url == live_server.url + f'/users/{user.pk}'
     last_post = Post.objects.all().last()
     assert last_post.user == user
 
