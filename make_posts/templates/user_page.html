@@ -11,10 +11,10 @@
 <div>
     <h2>List of all posts</h2>
     {% for post in posts %}
-    <div>
+    <a href="{% url 'post_info' post.pk %}" data-test="post-info"><div>
         <h1>Post: {{ post.pk }}</h1>
         <p>{{ post.content }}</p>
-    </div>
+    </div></a>
     {% endfor %}
     <h2>Make a New Post</h2>
     <form action="" method="POST">

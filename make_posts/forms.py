@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UsernameField
-from make_posts.models import Post
+from make_posts.models import Post, Comment
 
 
 class UserLoginForm(AuthenticationForm):
@@ -24,3 +24,12 @@ class PostForm(forms.ModelForm):
 
     def clean(self):
         super().clean()
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['comment_content']
+        widgets = {
+            'comment_content': forms.TextInput(attrs={'data-test': 'text-input'})
+        }

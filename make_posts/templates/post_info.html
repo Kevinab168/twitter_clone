@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+    <h1>Post</h1>
+    <p>{{ post.content }}</p>
+    <h3>Comments</h3>
+    {% for comment in comments %}
+        <div>
+            <p>User {{ comment.user.username }}</p>
+            <p>Comment {{ comment.comment_content }}</p>
+        </div>
+    {% endfor %}
+</div>
+<div>
+    <form action="{% url 'post_info' post.pk %}" method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Comment This" data-test="create-comment">
+    </form>
+</div>
+{% endblock content %}

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
-from make_posts.models import User, Post
-from make_posts.forms import UserLoginForm, PostForm
+from make_posts.models import User, Post, Comment
+from make_posts.forms import UserLoginForm, PostForm, CommentForm
 
 
 def homepage(request):
@@ -38,3 +38,21 @@ def user_page(request, user_id):
         'posts': all_posts
     }
     return render(request, 'user_page.html', context)
+
+
+def posts_info(request, post_id):
+    post = Post.objects.get(pk=post_id)
+    current_user = request.user
+    if request.method == "POST":
+        form = CommentForm(data=request.POST)
+        if form.is_valid():
+            comment_content = form.cleaned_data.get('comment_content')
+            Comment.objects.create(comment_content=comment_content, post=post, user=current_user)
+    form = CommentForm()
+    comments = Comment.objects.filter(post=post)
+    context = {
+        'post': post,
+        'form': form,
+        'comments': comments
+    }
+    return render(request, 'post_info.html', context)
