@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+    <h1 data-test="user">Welcome to {{ user.username}}'s page</h1>
+</div>
+<div>
+    <p>following</p>
+    <p>followers</p>
+</div>
+<div>
+    <h2>List of all posts</h2>
+    {% for post in posts %}
+    <div>
+        <h1>Post: {{ post.pk }}</h1>
+        <p>{{ post.content }}</p>
+    </div>
+    {% endfor %}
+    <h2>Make a New Post</h2>
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Post It" data-test="make-post">
+    </form>
+</div>
+
+{% endblock content %}

@@ -6,6 +6,11 @@
     <title>Twitter Page</title>
 </head>
 <body>
+    <div>
+        {% if user.is_authenticated %}
+        {{ user.username }}
+        {% endif %}
+    </div>
     {% block content %}
     {% endblock content %}
 </body>
