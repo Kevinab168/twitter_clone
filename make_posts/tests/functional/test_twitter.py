@@ -3,6 +3,7 @@ from make_posts.tests.factories import UserFactory
 
 register(UserFactory)
 
+
 def test_landing_page(driver, live_server):
     driver.get(live_server.url)
     assert "welcome" in driver.page_source.lower()
