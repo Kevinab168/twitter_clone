@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login,forms
+from django.contrib.auth import authenticate, login
 from make_posts.models import User, Post
 from make_posts.forms import UserLoginForm, PostForm
 
@@ -15,7 +15,7 @@ def log_in(request):
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
-            if user: 
+            if user:
                 login(request, user=user)
                 return redirect('user_page', user.pk)
     userform = UserLoginForm()
