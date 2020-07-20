@@ -11,14 +11,15 @@ register(FollowFactory)
 def test_landing_page(driver, live_server):
     driver.get(live_server.url)
     assert "welcome" in driver.page_source.lower()
-    assert driver.find_element_by_css_selector('[data-test="log_in"]')
 
 
 def test_login_page(driver, live_server, user_factory):
     user = user_factory.create()
     user.set_password('test')
     user.save()
-    driver.get(live_server.url + '/login')
+    driver.get(live_server.url)
+    login_link = driver.find_element_by_css_selector('[data-test="login-link"]')
+    login_link.click()
     username_input = driver.find_element_by_css_selector('[data-test="username"]')
     username_input.send_keys(user.username)
     password_input = driver.find_element_by_css_selector('[data-test="password"]')
@@ -63,7 +64,7 @@ def test_make_comment(driver, live_server, login_user, user_factory, post_factor
     assert recent_comment.post
 
 
-def test_follow(driver, live_server, login_user, user_factory, post_factory):
+def test_follow_change(driver, live_server, login_user, user_factory, post_factory):
     user = user_factory.create()
     login_user(user)
     for _ in range(10):
@@ -104,3 +105,19 @@ def test_see_following(driver, live_server, login_user, user_factory, follower_f
     following_list = driver.find_elements_by_css_selector('[data-test="following"]')
     assert len(following_list) == 20
     assert 'Following' in driver.page_source
+
+
+def test_follow_user_one_time(driver, live_server, login_user, user_factory, follower_factory, follow_factory):
+    user1 = user_factory.create()
+    user2 = user_factory.create()
+    follower = follower_factory.create(user=user2)
+    follow_factory.create(follower=follower, following=user1)
+    login_user(user2)
+    driver.get(live_server.url + f'/users/{user1.pk}')
+    follow_button = driver.find_element_by_css_selector('[data-test="follow"]')
+    follow_button.click()
+    follower_count = driver.find_element_by_css_selector('[data-test="follower-count"]').text
+    assert '1' in follower_count
+    following_count = driver.find_element_by_css_selector('[data-test="following-count"]').text
+    assert '0' in following_count
+
