@@ -1,7 +1,7 @@
 from pytest_factoryboy import register
 from make_posts.tests.factories import UserFactory, PostFactory, FollowerFactory, FollowFactory
 from make_posts.models import Post, Comment
-import time
+
 
 
 register(UserFactory)
@@ -87,7 +87,7 @@ def test_see_followers(driver, live_server, login_user, user_factory, follow_fac
     for _ in range(20):
         follow_factory.create(following=user)
     driver.get(live_server.url + f'/users/{user.pk}')
-    followers_link = driver.find_element_by_css_selector('[data-test="follower-count"]')
+    followers_link = driver.find_element_by_css_selector('[data-test="follower-link"]')
     followers_link.click()
     followers_list = driver.find_elements_by_css_selector('[data-test="followers"]')
     assert len(followers_list) == 20
