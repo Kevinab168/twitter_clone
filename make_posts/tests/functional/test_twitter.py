@@ -120,4 +120,3 @@ def test_follow_user_one_time(driver, live_server, login_user, user_factory, fol
     assert '1' in follower_count
     following_count = driver.find_element_by_css_selector('[data-test="following-count"]').text
     assert '0' in following_count
-
