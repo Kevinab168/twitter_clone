@@ -67,7 +67,7 @@ def follow(request, user_id):
     if request.user.is_authenticated:
         (follower, created) = Follower.objects.get_or_create(user=request.user)
         user_to_follow = User.objects.get(pk=user_id)
-        Follow.objects.create(follower=follower, following=user_to_follow)
+        Follow.objects.get_or_create(follower=follower, following=user_to_follow)
         return redirect('user_page', user_to_follow.pk)
 
 
