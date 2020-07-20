@@ -1,6 +1,6 @@
 from pytest_factoryboy import register
 from make_posts.tests.factories import UserFactory, PostFactory
-from make_posts.models import Post, Comment
+from make_posts.models import Post, Comment, Follow, Follower
 
 
 register(UserFactory)
@@ -60,3 +60,18 @@ def test_make_comment(driver, live_server, login_user, user_factory, post_factor
     recent_comment = Comment.objects.all().last()
     assert recent_comment.user == user
     assert recent_comment.post
+
+
+def test_follow(driver, live_server, login_user, user_factory, post_factory):
+    user = user_factory.create()
+    login_user(user)
+    for _ in range(10):
+        post_factory.create(user=user)
+    user2 = user_factory.create()
+    login_user(user2)
+    driver.get(live_server.url + f'/users/{user.pk}')
+    follow_button = driver.find_element_by_css_selector('[data-test="follow"]')
+    follow_button.click()
+    assert user2 == Follower.objects.all().last().user
+    follower_count = driver.find_element_by_css_selector('[data-test="follower-count"]').text
+    assert '1' in follower_count

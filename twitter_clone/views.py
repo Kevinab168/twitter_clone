@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
-from make_posts.models import User, Post, Comment
+from make_posts.models import User, Post, Comment, Follower, Follow
 from make_posts.forms import UserLoginForm, PostForm, CommentForm
 
 
@@ -32,10 +32,14 @@ def user_page(request, user_id):
     user = User.objects.get(pk=user_id)
     postform = PostForm()
     all_posts = Post.objects.filter(user=user)
+    followers_count = Follow.objects.filter(following=user).count()
+    following_count = Follower.objects.filter(user=user).count()
     context = {
         'user': user,
         'form': postform,
-        'posts': all_posts
+        'posts': all_posts,
+        'followers': followers_count,
+        'following': following_count
     }
     return render(request, 'user_page.html', context)
 
@@ -56,3 +60,11 @@ def posts_info(request, post_id):
         'comments': comments
     }
     return render(request, 'post_info.html', context)
+
+
+def follow(request, user_id):
+    if request.user.is_authenticated:
+        follower = Follower.objects.create(user=request.user)
+        user_to_follow = User.objects.get(pk=user_id)
+        Follow.objects.create(follower=follower, following=user_to_follow)
+        return redirect('user_page', user_to_follow.pk)

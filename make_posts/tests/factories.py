@@ -9,7 +9,7 @@ class UserFactory(DjangoModelFactory):
 
     username = factory.Faker('user_name')
     password = factory.Faker('password')
-
+  
 
 class PostFactory(DjangoModelFactory):
     class Meta:
@@ -17,3 +17,4 @@ class PostFactory(DjangoModelFactory):
 
     content = factory.Faker('sentence', nb_words=7)
     user = factory.SubFactory(UserFactory)
+
