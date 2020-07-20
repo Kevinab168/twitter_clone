@@ -1,10 +1,13 @@
 from pytest_factoryboy import register
-from make_posts.tests.factories import UserFactory, PostFactory
-from make_posts.models import Post, Comment, Follow, Follower
+from make_posts.tests.factories import UserFactory, PostFactory, FollowerFactory, FollowFactory
+from make_posts.models import Post, Comment
+import time
 
 
 register(UserFactory)
 register(PostFactory)
+register(FollowerFactory)
+register(FollowFactory)
 
 
 def test_landing_page(driver, live_server):
@@ -72,6 +75,20 @@ def test_follow(driver, live_server, login_user, user_factory, post_factory):
     driver.get(live_server.url + f'/users/{user.pk}')
     follow_button = driver.find_element_by_css_selector('[data-test="follow"]')
     follow_button.click()
-    assert user2 == Follower.objects.all().last().user
     follower_count = driver.find_element_by_css_selector('[data-test="follower-count"]').text
     assert '1' in follower_count
+    following_count = driver.find_element_by_css_selector('[data-test="following-count"]').text
+    assert '0' in following_count
+
+
+def test_see_followers(driver, live_server, login_user, user_factory, follow_factory):
+    user = user_factory.create()
+    login_user(user)
+    for _ in range(20):
+        follow_factory.create(following=user)
+    driver.get(live_server.url + f'/users/{user.pk}')
+    followers_link = driver.find_element_by_css_selector('[data-test="follower-count"]')
+    followers_link.click()
+    followers_list = driver.find_elements_by_css_selector('[data-test="followers"]')
+    assert len(followers_list) == 20
+    assert 'Followers' in driver.page_source
