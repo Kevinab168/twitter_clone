@@ -90,3 +90,17 @@ def test_see_followers(driver, live_server, login_user, user_factory, follow_fac
     followers_list = driver.find_elements_by_css_selector('[data-test="followers"]')
     assert len(followers_list) == 20
     assert 'Followers' in driver.page_source
+
+
+def test_see_following(driver, live_server, login_user, user_factory, follower_factory, follow_factory):
+    user = user_factory.create()
+    login_user(user)
+    follower = follower_factory.create(user=user)
+    for _ in range(20):
+        follow_factory.create(follower=follower)
+    driver.get(live_server.url + f'/users/{user.pk}')
+    following_link = driver.find_element_by_css_selector('[data-test="following-link"]')
+    following_link.click()
+    following_list = driver.find_elements_by_css_selector('[data-test="following"]')
+    assert len(following_list) == 20
+    assert 'Following' in driver.page_source

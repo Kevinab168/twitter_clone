@@ -30,10 +30,11 @@ def user_page(request, user_id):
             content = postform.cleaned_data.get('content')
             Post.objects.create(content=content, user=request.user)
     user = User.objects.get(pk=user_id)
+    (follower, created) = Follower.objects.get_or_create(user=user)
     postform = PostForm()
     all_posts = Post.objects.filter(user=user)
     followers_count = Follow.objects.filter(following=user).count()
-    following_count = Follower.objects.filter(user=user).count()
+    following_count = Follow.objects.filter(follower=follower).count()
     context = {
         'user': user,
         'form': postform,
@@ -64,7 +65,7 @@ def posts_info(request, post_id):
 
 def follow(request, user_id):
     if request.user.is_authenticated:
-        follower = Follower.objects.create(user=request.user)
+        (follower, created) = Follower.objects.get_or_create(user=request.user)
         user_to_follow = User.objects.get(pk=user_id)
         Follow.objects.create(follower=follower, following=user_to_follow)
         return redirect('user_page', user_to_follow.pk)
@@ -78,3 +79,14 @@ def show_followers(request, user_id):
         'followers': follow
     }
     return render(request, 'follower_list.html', context)
+
+
+def show_following(request, user_id):
+    user = User.objects.get(pk=user_id)
+    follower = Follower.objects.get(user=user)
+    follow = Follow.objects.filter(follower=follower)
+    context = {
+        'user': user,
+        'following': follow
+    }
+    return render(request, 'following_list.html', context)

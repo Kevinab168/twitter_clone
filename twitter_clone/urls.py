@@ -24,5 +24,6 @@ urlpatterns = [
     path('users/<int:user_id>/', views.user_page, name='user_page'),
     path('posts/<int:post_id>/', views.posts_info, name='post_info'),
     path('users/<int:user_id>/follow', views.follow, name='follow'),
-    path('users/<int:user_id>/followers', views.show_followers, name='show_followers')
+    path('users/<int:user_id>/followers', views.show_followers, name='show_followers'),
+    path('users/<int:user_id>/following', views.show_following, name='show_following')
 ]
