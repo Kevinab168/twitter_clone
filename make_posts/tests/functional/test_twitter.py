@@ -2,8 +2,6 @@ from pytest_factoryboy import register
 from make_posts.tests.factories import UserFactory, PostFactory, FollowerFactory, FollowFactory
 from make_posts.models import Post, Comment
 
-
-
 register(UserFactory)
 register(PostFactory)
 register(FollowerFactory)

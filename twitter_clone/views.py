@@ -68,3 +68,13 @@ def follow(request, user_id):
         user_to_follow = User.objects.get(pk=user_id)
         Follow.objects.create(follower=follower, following=user_to_follow)
         return redirect('user_page', user_to_follow.pk)
+
+
+def show_followers(request, user_id):
+    user = User.objects.get(pk=user_id)
+    follow = Follow.objects.filter(following=user)
+    context = {
+        'user': user,
+        'followers': follow
+    }
+    return render(request, 'follower_list.html', context)

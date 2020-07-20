@@ -6,8 +6,8 @@
     <a href="{% url 'follow' user.pk %}" data-test="follow">Follow</a>
 </div>
 <div>
-    <p>following: {{ following }}</p>
-    <p data-test="follower-count">followers: {{ followers }}</p>
+    <p data-test="following-count">following: {{ following }}</p>
+    <a href="{% url 'show_followers' user.pk %}" data-test="followers-link"><p data-test="follower-count">followers: {{ followers }}</p></a>
 </div>
 <div>
     <h2>List of all posts</h2>

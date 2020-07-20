@@ -22,6 +22,7 @@ urlpatterns = [
     path('', views.homepage, name='homepage'),
     path('login/', views.log_in, name='log_in'),
     path('users/<int:user_id>/', views.user_page, name='user_page'),
-    path('posts/<int:post_id>/', views.posts_info, name='post_info'), 
-    path('users/<int:user_id>/follow', views.follow, name='follow')
+    path('posts/<int:post_id>/', views.posts_info, name='post_info'),
+    path('users/<int:user_id>/follow', views.follow, name='follow'),
+    path('users/<int:user_id>/followers', views.show_followers, name='show_followers')
 ]

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div>
+        <h1>{{ user.username }} Follower List</h1>
+    </div>
+    <div>
+        <ul>
+            {% for follower in followers %}
+            <li data-test="followers">Name: {{ follower.follower.user.username }} </li>
+            {% endfor %}
+        </ul>
+       
+    </div>
+{% endblock content %}
