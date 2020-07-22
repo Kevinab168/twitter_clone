@@ -8,19 +8,15 @@ class User(AbstractUser):
 
 class Post(models.Model):
     content = models.TextField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
 
 
 class Comment(models.Model):
     comment_content = models.TextField()
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-
-class Follower(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
 
 
 class Follow(models.Model):
-    follower = models.ForeignKey(Follower, on_delete=models.CASCADE)
-    following = models.ForeignKey(User, on_delete=models.CASCADE)
+    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followers')
+    following = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')

@@ -31,5 +31,5 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ['comment_content']
         widgets = {
-            'comment_content': forms.TextInput(attrs={'data-test': 'text-input'})
+            'comment_content': forms.TextInput(attrs={'data-test': 'comment-text'})
         }

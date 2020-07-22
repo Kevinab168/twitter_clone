@@ -25,6 +25,6 @@ def login_user(driver, client, live_server):
         user.save()
         client.login(username=user.username, password=password)
         cookie = client.cookies['sessionid']
-        driver.get(live_server.url + '/login')
+        driver.get(live_server.url)
         driver.add_cookie({'name': 'sessionid', 'value': cookie.value, 'secure': False, 'path': '/'})
     return action

@@ -8,7 +8,7 @@
     {% for comment in comments %}
         <div>
             <p>User {{ comment.user.username }}</p>
-            <p>Comment {{ comment.comment_content }}</p>
+            <p data-test="user-comment">Comment {{ comment.comment_content }}</p>
         </div>
     {% endfor %}
 </div>

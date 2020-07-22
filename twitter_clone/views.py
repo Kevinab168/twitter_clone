@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
-from make_posts.models import User, Post, Comment, Follower, Follow
+from make_posts.models import User, Post, Comment, Follow
 from make_posts.forms import UserLoginForm, PostForm, CommentForm
+from django.contrib.auth.decorators import login_required
 
 
 def homepage(request):
@@ -30,11 +31,10 @@ def user_page(request, user_id):
             content = postform.cleaned_data.get('content')
             Post.objects.create(content=content, user=request.user)
     user = User.objects.get(pk=user_id)
-    (follower, created) = Follower.objects.get_or_create(user=user)
     postform = PostForm()
     all_posts = Post.objects.filter(user=user)
     followers_count = Follow.objects.filter(following=user).count()
-    following_count = Follow.objects.filter(follower=follower).count()
+    following_count = Follow.objects.filter(follower=user).count()
     context = {
         'user': user,
         'form': postform,
@@ -63,28 +63,26 @@ def posts_info(request, post_id):
     return render(request, 'post_info.html', context)
 
 
+@login_required
 def follow(request, user_id):
-    if request.user.is_authenticated:
-        (follower, created) = Follower.objects.get_or_create(user=request.user)
-        user_to_follow = User.objects.get(pk=user_id)
-        Follow.objects.get_or_create(follower=follower, following=user_to_follow)
-        return redirect('user_page', user_to_follow.pk)
+    user_to_follow = User.objects.get(pk=user_id)
+    Follow.objects.get_or_create(follower=request.user, following=user_to_follow)
+    return redirect('user_page', user_to_follow.pk)
 
 
 def show_followers(request, user_id):
     user = User.objects.get(pk=user_id)
-    follow = Follow.objects.filter(following=user)
+    followers = Follow.objects.filter(following=user)
     context = {
         'user': user,
-        'followers': follow
+        'followers': followers
     }
     return render(request, 'follower_list.html', context)
 
 
 def show_following(request, user_id):
     user = User.objects.get(pk=user_id)
-    follower = Follower.objects.get(user=user)
-    follow = Follow.objects.filter(follower=follower)
+    follow = Follow.objects.filter(follower=user)
     context = {
         'user': user,
         'following': follow

@@ -2,12 +2,12 @@
 
 {% block content %}
     <div>
-        <h1>{{ user.username }} Following List</h1>
+        <h1 data-test="following-page-heading">{{ user.username }} Following List</h1>
     </div>
     <div>
         <ul>
             {% for follow in following %}
-            <li data-test="following">Name: {{ follow.following.username }} </li>
+            <a href="{% url 'user_page' follow.following.pk %}" data-test="following-homepage"><li data-test="following">Name: {{ follow.following.username }} </li></a>
             {% endfor %}
         </ul>
        

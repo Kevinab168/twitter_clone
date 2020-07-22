@@ -1,6 +1,6 @@
 import factory
 from factory.django import DjangoModelFactory
-from make_posts.models import User, Post, Follow, Follower
+from make_posts.models import User, Post, Follow
 
 
 class UserFactory(DjangoModelFactory):
@@ -19,16 +19,9 @@ class PostFactory(DjangoModelFactory):
     user = factory.SubFactory(UserFactory)
 
 
-class FollowerFactory(DjangoModelFactory):
-    class Meta:
-        model = Follower
-
-    user = factory.SubFactory(UserFactory)
-
-
 class FollowFactory(DjangoModelFactory):
     class Meta:
         model = Follow
 
-    follower = factory.SubFactory(FollowerFactory)
+    follower = factory.SubFactory(UserFactory)
     following = factory.SubFactory(UserFactory)
