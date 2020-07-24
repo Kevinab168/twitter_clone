@@ -13,6 +13,15 @@ class HomeView(TemplateView):
     template_name = 'index.html'
 
 
+class UserHomeView(ListView):
+    template_name = 'user_homepage.html'
+    model = Post
+    context_object_name = 'users_followed'
+
+    def get_queryset(self, *args, **kwargs):
+        return Follow.objects.filter(follower=self.request.user)
+
+
 class LoginView(LoginView):
     template_name = 'log_in.html'
     authentication_form = UserLoginForm
@@ -28,6 +37,7 @@ class PostListView(ListView):
     model = Post
     template_name = 'user_page.html'
     context_object_name = 'posts'
+    paginate_by = 10
 
     def get_queryset(self):
         user = get_object_or_404(User, pk=self.kwargs['user_id'])

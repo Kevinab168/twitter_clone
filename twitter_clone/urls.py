@@ -25,5 +25,6 @@ urlpatterns = [
     path('posts/<int:post_id>/', views.PostDetailView.as_view(), name='post_info'),
     path('users/<int:user_id>/follow', views.FollowView.as_view(), name='follow'),
     path('users/<int:user_id>/followers', views.FollowersListView.as_view(), name='show_followers'),
-    path('users/<int:user_id>/following', views.FollowingListView.as_view(), name='show_following')
+    path('users/<int:user_id>/following', views.FollowingListView.as_view(), name='show_following'),
+    path('home/', views.UserHomeView.as_view(), name='user_home')
 ]
