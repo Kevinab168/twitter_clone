@@ -19,11 +19,11 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.homepage, name='homepage'),
-    path('login/', views.log_in, name='log_in'),
-    path('users/<int:user_id>/', views.user_page, name='user_page'),
-    path('posts/<int:post_id>/', views.posts_info, name='post_info'),
-    path('users/<int:user_id>/follow', views.follow, name='follow'),
-    path('users/<int:user_id>/followers', views.show_followers, name='show_followers'),
-    path('users/<int:user_id>/following', views.show_following, name='show_following')
+    path('', views.HomeView.as_view(), name='homepage'),
+    path('login/', views.LoginView.as_view(), name='log_in'),
+    path('users/<int:user_id>/', views.UserPageView.as_view(), name='user_page'),
+    path('posts/<int:post_id>/', views.PostDetailView.as_view(), name='post_info'),
+    path('users/<int:user_id>/follow', views.FollowView.as_view(), name='follow'),
+    path('users/<int:user_id>/followers', views.FollowersListView.as_view(), name='show_followers'),
+    path('users/<int:user_id>/following', views.FollowingListView.as_view(), name='show_following')
 ]

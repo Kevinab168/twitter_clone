@@ -2,12 +2,12 @@
 
 {% block content %}
 <div>
-    <h1 data-test="user">Welcome to {{ user.username}}'s page</h1>
-    <a href="{% url 'follow' user.pk %}" data-test="follow">Follow</a>
+    <h1 data-test="user">Welcome to {{ searched_user.username}}'s page</h1>
+    <a href="{% url 'follow' searched_user.pk %}" data-test="follow">Follow</a>
 </div>
 <div>
-    <a href="{% url 'show_following' user.pk %}" data-test="following-link"><p data-test="following-count">following: {{ following }}</p></a>
-    <a href="{% url 'show_followers' user.pk %}" data-test="followers-link"><p data-test="follower-count">followers: {{ followers }}</p></a>
+    <a href="{% url 'show_following' searched_user.pk %}" data-test="following-link"><p data-test="following-count">following: {{ following_number }}</p></a>
+    <a href="{% url 'show_followers' searched_user.pk %}" data-test="followers-link"><p data-test="follower-count">followers: {{ follower_number }}</p></a>
 </div>
 <div>
     <h2>List of all posts</h2>
