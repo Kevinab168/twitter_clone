@@ -1,9 +1,10 @@
 from pytest_factoryboy import register
-from make_posts.tests.factories import UserFactory, PostFactory, FollowFactory
+from make_posts.tests.factories import UserFactory, PostFactory, CommentFactory, FollowFactory
 from make_posts.models import Post, Comment, Follow, User
 
 register(UserFactory)
 register(PostFactory)
+register(CommentFactory)
 register(FollowFactory)
 
 
@@ -162,3 +163,36 @@ def test_followed_user_posts_on_homepage(driver, live_server, login_user, user_f
     last_post_text = Post.objects.all().last().content
     assert last_user.username in last_post.find_element_by_css_selector('[data-test="post_author"]').text
     assert last_post_text in last_post.find_element_by_css_selector('[data-test="post_text"]').text
+
+
+def test_date_time_on_posts(driver, live_server, login_user, user_factory, post_factory, convert_datetime):
+    user = user_factory.create()
+    post_factory.create(user=user)
+    login_user(user)
+    driver.get(live_server.url + f'/users/{user.pk}')
+    post_creation_date = driver.find_element_by_css_selector('[data-test="created_date"]')
+    post_updated_date = driver.find_element_by_css_selector('[data-test="updated_date"]')
+    post = Post.objects.all().last()
+    assert convert_datetime(post.created_at) in post_creation_date.text
+    assert convert_datetime(post.updated_at) in post_updated_date.text
+
+
+def test_date_time_on_comments(
+     driver,
+     live_server,
+     login_user,
+     user_factory,
+     post_factory,
+     comment_factory,
+     convert_datetime
+):
+    user = user_factory.create()
+    post = post_factory.create(user=user)
+    comment = comment_factory.create(user=user, post=post)
+    login_user(user)
+    driver.get(live_server.url + f'/posts/{post.pk}')
+    comment_creation_date = driver.find_element_by_css_selector('[data-test="comment_creation_date"]')
+    comment_updated_date = driver.find_element_by_css_selector('[data-test="comment_updated_date"]')
+    comment = Comment.objects.all().last()
+    assert convert_datetime(comment.created_at) in comment_creation_date.text
+    assert convert_datetime(comment.updated_at) in comment_updated_date.text

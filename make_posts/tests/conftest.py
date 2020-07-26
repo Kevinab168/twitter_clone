@@ -1,4 +1,5 @@
 import pytest
+from datetime import datetime
 import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -27,4 +28,12 @@ def login_user(driver, client, live_server):
         cookie = client.cookies['sessionid']
         driver.get(live_server.url)
         driver.add_cookie({'name': 'sessionid', 'value': cookie.value, 'secure': False, 'path': '/'})
+    return action
+
+
+@pytest.fixture
+def convert_datetime():
+    def action(datetime_obj):
+        new_format = datetime.strftime(datetime_obj, '%B %-d, %Y')
+        return new_format
     return action

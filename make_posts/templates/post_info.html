@@ -9,6 +9,8 @@
         <div>
             <p>User {{ comment.user.username }}</p>
             <p data-test="user-comment">Comment {{ comment.comment_content }}</p>
+            <p data-test="comment_creation_date">Created:  {{ comment.created_at }}</p>
+            <p data-test="comment_updated_date">Updated: {{ comment.updated_at }}</p>
         </div>
     {% endfor %}
 </div>

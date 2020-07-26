@@ -6,12 +6,20 @@ class User(AbstractUser):
     pass
 
 
-class Post(models.Model):
+class TimeStampModel(models.Model):
+    class Meta:
+        abstract = True
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+class Post(TimeStampModel):
     content = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
 
 
-class Comment(models.Model):
+class Comment(TimeStampModel):
     comment_content = models.TextField()
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')

@@ -1,6 +1,6 @@
 import factory
 from factory.django import DjangoModelFactory
-from make_posts.models import User, Post, Follow
+from make_posts.models import User, Post, Comment, Follow
 
 
 class UserFactory(DjangoModelFactory):
@@ -16,6 +16,15 @@ class PostFactory(DjangoModelFactory):
         model = Post
 
     content = factory.Faker('sentence', nb_words=7)
+    user = factory.SubFactory(UserFactory)
+
+
+class CommentFactory(DjangoModelFactory):
+    class Meta:
+        model = Comment
+
+    comment_content = factory.Faker('sentence', nb_words=7)
+    post = factory.SubFactory(PostFactory)
     user = factory.SubFactory(UserFactory)
 
 
