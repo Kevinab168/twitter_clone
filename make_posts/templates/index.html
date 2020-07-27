@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Welcome to Chirper</h1>
-<p>Please Log in</p>
-<a href="{% url 'log_in' %}" data-test="login-link">Log In</a>
+<div class="welcome">
+    <h1 class="mt-3">Welcome to Chirper</h1>
+    <p>Please Log in</p>
+    <a href="{% url 'log_in' %}" class="btn btn-primary" data-test="login-link">Log In</a>
+</div>
 {% endblock content %}

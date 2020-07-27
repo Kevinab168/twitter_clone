@@ -19,7 +19,7 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ['content']
         widgets = {
-            'content': forms.TextInput(attrs={'data-test': 'post'})
+            'content': forms.TextInput(attrs={'data-test': 'post', 'class': 'form-control'})
         }
 
     def clean(self):
@@ -31,5 +31,5 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ['comment_content']
         widgets = {
-            'comment_content': forms.TextInput(attrs={'data-test': 'comment-text'})
+            'comment_content': forms.TextInput(attrs={'data-test': 'comment-text', 'class': 'form-control'})
         }

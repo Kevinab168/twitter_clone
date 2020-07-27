@@ -5,9 +5,9 @@
         <h1 data-test="following-page-heading">{{ searched_user.username }} Following List</h1>
     </div>
     <div>
-        <ul>
+        <ul class="list-group">
             {% for follow in following %}
-            <a href="{% url 'user_page' follow.following.pk %}" data-test="following-homepage"><li data-test="following">Name: {{ follow.following.username }} </li></a>
+            <a href="{% url 'user_page' follow.following.pk %}" data-test="following-homepage"><li data-test="following" class="list-group-item">{{ follow.following.username }} </li></a>
             {% endfor %}
         </ul>
        

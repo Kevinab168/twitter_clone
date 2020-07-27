@@ -1,0 +1,14 @@
+* {
+    box-sizing: border-box;
+}
+.welcome { 
+    text-align: center;
+}
+
+.btn { 
+    width: 50%
+}
+
+.stretch-it { 
+    width: 100%
+}

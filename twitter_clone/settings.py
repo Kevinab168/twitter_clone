@@ -121,3 +121,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'make_posts.User'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'make_posts/static'),
+]
