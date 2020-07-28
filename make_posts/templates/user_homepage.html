@@ -8,10 +8,8 @@
     <div data-test="followed_user_posts" class="mt-3">
         {% if followed.following.posts.all %}
         <div class="card">
-            <div class="card-header" data-test="post_author">
-            {{ followed.following.username }}
-            </div>
             <div class="card-body">
+            <p class="badge badge-danger" data-test="post_author">{{ followed.following.username }}</p>
             <p class="card-text" data-test="post_text">{{ followed.following.posts.all.last.content }}</p>
             </div>
         </div>

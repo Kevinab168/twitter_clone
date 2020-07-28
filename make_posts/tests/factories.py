@@ -1,6 +1,6 @@
 import factory
 from factory.django import DjangoModelFactory
-from make_posts.models import User, Post, Comment, Follow
+from make_posts.models import User, Post, Comment, Follow, Image
 
 
 class UserFactory(DjangoModelFactory):
@@ -34,3 +34,11 @@ class FollowFactory(DjangoModelFactory):
 
     follower = factory.SubFactory(UserFactory)
     following = factory.SubFactory(UserFactory)
+
+
+class ImageFactory(DjangoModelFactory):
+    class Meta:
+        model = Image
+
+    source = factory.Faker('image_url')
+    post = factory.SubFactory(PostFactory)

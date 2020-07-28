@@ -1,11 +1,12 @@
 from pytest_factoryboy import register
-from make_posts.tests.factories import UserFactory, PostFactory, CommentFactory, FollowFactory
+from make_posts.tests.factories import UserFactory, PostFactory, CommentFactory, FollowFactory, ImageFactory
 from make_posts.models import Post, Comment, Follow, User
 
 register(UserFactory)
 register(PostFactory)
 register(CommentFactory)
 register(FollowFactory)
+register(ImageFactory)
 
 
 def test_landing_page(driver, live_server):
@@ -149,15 +150,15 @@ def test_follow_user_one_time(driver, live_server, login_user, user_factory, fol
 
 def test_followed_user_posts_on_homepage(driver, live_server, login_user, user_factory, follow_factory, post_factory):
     user1 = user_factory.create()
-    for _ in range(20):
+    POSTS_COUNT = 20
+    for _ in range(POSTS_COUNT):
         followed_user = user_factory.create()
         follow_factory.create(follower=user1, following=followed_user)
         post_factory.create(user=followed_user)
     login_user(user1)
     driver.get(live_server.url + '/home')
     followed_user_posts = driver.find_elements_by_css_selector('[data-test="followed_user_posts"]')
-    posts_count = 20
-    assert len(followed_user_posts) == posts_count
+    assert len(followed_user_posts) == POSTS_COUNT
     last_post = followed_user_posts[-1]
     last_user = User.objects.all().last()
     last_post_text = Post.objects.all().last().content
@@ -196,3 +197,13 @@ def test_date_time_on_comments(
     comment = Comment.objects.all().last()
     assert convert_datetime(comment.created_at) in comment_creation_date.text
     assert convert_datetime(comment.updated_at) in comment_updated_date.text
+
+
+def test_image_display_on_post(driver, live_server, post_factory, login_user, image_factory):
+    post = post_factory.create()
+    for _ in range(3):
+        image_factory.create(post=post)
+    IMAGE_COUNT = 3
+    driver.get(live_server.url + f'/posts/{post.pk}')
+    images_on_post = driver.find_elements_by_css_selector('[data-test="post_img_preview"]')
+    assert len(images_on_post) == IMAGE_COUNT

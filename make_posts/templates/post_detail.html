@@ -1,0 +1,14 @@
+<div class="card mt-3">
+    <div class="card-body">
+        <p data-test="created_date">Created: {{ post.created_at }}</p>
+        <p data-test="updated_date">Updated: {{ post.updated_at }}</p>
+        <p data-test="created-post">{{ post.content }}</p>
+
+        <p>Images</p>
+        {% if post.images.all %}
+        {% for image in post.images.all %}
+            <img data-test="post_img_preview" src="{{ image.source }}" alt="post_images">
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>

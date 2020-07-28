@@ -28,3 +28,8 @@ class Comment(TimeStampModel):
 class Follow(models.Model):
     follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followers')
     following = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
+
+
+class Image(models.Model):
+    source = models.ImageField(upload_to='static/images/', null=True)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='images')

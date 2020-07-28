@@ -12,3 +12,9 @@
 .stretch-it { 
     width: 100%
 }
+
+img { 
+    display: inline-block;
+    height: 100px;
+    width: 100px;
+}
