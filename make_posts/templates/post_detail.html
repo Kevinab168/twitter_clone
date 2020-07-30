@@ -1,3 +1,4 @@
+{% load static %}
 <div class="card mt-3">
     <div class="card-body">
         <p data-test="created_date">Created: {{ post.created_at }}</p>
@@ -7,7 +8,7 @@
         <p>Images</p>
         {% if post.images.all %}
         {% for image in post.images.all %}
-            <img data-test="post_img_preview" src="{{ image.source }}" alt="post_images">
+            <img data-test="post_img_preview" src="/static/{{ image.source }}" alt="post_images">
         {% endfor %}
         {% endif %}
     </div>

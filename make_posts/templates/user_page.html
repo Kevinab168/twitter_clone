@@ -11,10 +11,11 @@
         <a href="{% url 'follow' searched_user.pk %}" data-test="follow" class="badge btn-info">Follow</a>
     </div>
   </div>
-  <form action="" method="POST" class="mt-3">
+  <form action="" enctype="multipart/form-data" method="POST" class="mt-3">
     {% csrf_token %}
     <div class="form-group">
         {{ form }}
+        {{ img_form}}
     </div>
     <button class="btn btn-primary stretch-it" data-test="make-post">Post Here </button>
 </form>
@@ -29,7 +30,7 @@
     {% endfor %}
 </div>
 
-<script src="/static/app.js"></script>
+<!-- <script src="/static/app.js"></script> -->
 {% endblock content %}
 
 

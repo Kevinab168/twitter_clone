@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UsernameField
-from make_posts.models import Post, Comment
+from make_posts.models import Post, Comment, Image
 
 
 class UserLoginForm(AuthenticationForm):
@@ -32,4 +32,17 @@ class CommentForm(forms.ModelForm):
         fields = ['comment_content']
         widgets = {
             'comment_content': forms.TextInput(attrs={'data-test': 'comment-text', 'class': 'form-control'})
+        }
+
+
+class ImageUploadForm(forms.ModelForm):
+    class Meta:
+        model = Image
+        fields = ['source']
+        widgets = {
+            'source': forms.ClearableFileInput(attrs={
+                'multiple': True,
+                'required': False,
+                'data-test': 'img_upload'
+            })
         }

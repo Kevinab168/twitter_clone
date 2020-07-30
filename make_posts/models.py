@@ -15,7 +15,7 @@ class TimeStampModel(models.Model):
 
 
 class Post(TimeStampModel):
-    content = models.TextField()
+    content = models.TextField(null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
 
 
@@ -31,5 +31,5 @@ class Follow(models.Model):
 
 
 class Image(models.Model):
-    source = models.ImageField(upload_to='static/images/', null=True)
+    source = models.ImageField(upload_to='images/', null=True, blank=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='images')

@@ -1,8 +1,8 @@
 from django.shortcuts import redirect, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.contrib.auth.views import LoginView
-from make_posts.models import User, Post, Comment, Follow
-from make_posts.forms import UserLoginForm, PostForm, CommentForm
+from make_posts.models import User, Post, Comment, Follow, Image
+from make_posts.forms import UserLoginForm, PostForm, CommentForm, ImageUploadForm
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView, FormView
 from django.views.generic.list import ListView
@@ -37,7 +37,6 @@ class PostListView(ListView):
     model = Post
     template_name = 'user_page.html'
     context_object_name = 'posts'
-    paginate_by = 10
 
     def get_queryset(self):
         user = get_object_or_404(User, pk=self.kwargs['user_id'])
@@ -47,6 +46,7 @@ class PostListView(ListView):
         context = super().get_context_data(**kwargs)
         user = get_object_or_404(User, pk=self.kwargs['user_id'])
         context['form'] = PostForm
+        context['img_form'] = ImageUploadForm
         context['searched_user'] = user
         context['following_number'] = Follow.objects.filter(follower=user).count()
         context['follower_number'] = Follow.objects.filter(following=user).count()
@@ -58,8 +58,11 @@ class PostFormView(FormView):
     form_class = PostForm
 
     def form_valid(self, form):
+        files = self.request.FILES.getlist('source')
         post_text = form.cleaned_data.get('content')
-        Post.objects.create(content=post_text, user=self.request.user)
+        post = Post.objects.create(content=post_text, user=self.request.user)
+        for file in files:
+            Image.objects.create(source=file, post=post)
         self.success_url = f'/users/{self.kwargs["user_id"]}'
         return super().form_valid(form)
 
@@ -84,9 +87,10 @@ class CommentListView(ListView):
         return Comment.objects.filter(post=post)
 
     def get_context_data(self, **kwargs):
+        post = get_object_or_404(Post, pk=self.kwargs['post_id'])
         context = super().get_context_data(**kwargs)
         context['form'] = CommentForm
-        context['post'] = get_object_or_404(Post, pk=self.kwargs['post_id'])
+        context['post'] = post
         return context
 
 

@@ -1,7 +1,8 @@
+import shutil
 from pytest_factoryboy import register
 from make_posts.tests.factories import UserFactory, PostFactory, CommentFactory, FollowFactory, ImageFactory
 from make_posts.models import Post, Comment, Follow, User
-import time
+
 
 register(UserFactory)
 register(PostFactory)
@@ -214,11 +215,10 @@ def test_image_upload_form(driver, live_server, user_factory, login_user):
     user = user_factory()
     login_user(user)
     driver.get(live_server.url + f'/users/{user.pk}')
-    post_content = driver.find_element_by_css_selector('[data-test="post"]')
-    post_content.send_keys('2234234')
     image_upload_field = driver.find_element_by_css_selector('[data-test="img_upload"]')
     image_upload_field.send_keys('test.jpg')
     image_upload_field.send_keys('test2.jpg')
     make_post_button = driver.find_element_by_css_selector('[data-test="make-post"')
     make_post_button.click()
     assert driver.find_element_by_css_selector('[data-test="post_img_preview"]')
+    shutil.rmtree('./make_posts')
