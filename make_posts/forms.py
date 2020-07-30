@@ -46,3 +46,9 @@ class ImageUploadForm(forms.ModelForm):
                 'data-test': 'img_upload'
             })
         }
+
+
+class SearchForm(forms.Form):
+    search_field = forms.CharField(widget=forms.TextInput(attrs={
+        'data-test': 'search_field'
+    }))

@@ -2,11 +2,12 @@ from django.shortcuts import redirect, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.contrib.auth.views import LoginView
 from make_posts.models import User, Post, Comment, Follow, Image
-from make_posts.forms import UserLoginForm, PostForm, CommentForm, ImageUploadForm
+from make_posts.forms import UserLoginForm, PostForm, CommentForm, ImageUploadForm, SearchForm
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView, FormView
 from django.views.generic.list import ListView
 from django.views import View
+from django.db.models import Count
 
 
 class HomeView(TemplateView):
@@ -153,4 +154,30 @@ class FollowingListView(ListView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data()
         context['searched_user'] = get_object_or_404(User, pk=self.kwargs['user_id'])
+        return context
+
+
+class SearchView(FormView):
+    template_name = 'search.html'
+    form_class = SearchForm
+    success_url = '/search'
+
+    def post(self, request, *args, **kwargs):
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        if form.is_valid():
+            return self.form_valid(form)
+
+    def form_valid(self, form, *args, **kwargs):
+        searched_query = form.cleaned_data.get('search_field')
+        ordering = self.request.POST['order_results']
+        user_search_results = User.objects.filter(username__icontains=searched_query).annotate(num_followers=Count('following')).order_by(ordering)
+        context = super().get_context_data(**kwargs)
+        context['search'] = searched_query
+        context['user_results'] = user_search_results
+        return self.render_to_response(context)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = SearchForm
         return context

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+<form action="" method="POST">
+    {% csrf_token %}
+    {{ form }}
+    <label for="order_results">Sort By</label>
+    <select name="order_results" data-test="order_results">
+        <option value="-num_followers">Most Followers</option>
+        <option value="num_followers">Least Followers</option>
+    </select>
+    <input type="submit" value="Submit" data-test="search_user_button">
+</form>
+
+
+
+<h1>Search Results for <span>{{ search }}</span></h1>
+{% if user_results %}
+{% for result in user_results %}
+    <div>
+        <li data-test="search_results">{{ result.username }}</li>
+    </div>
+{% endfor %}
+{% endif %}
+{% endblock content %}

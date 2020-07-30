@@ -249,7 +249,7 @@ def test_sort_by_most_followers(driver, live_server, user_factory, follow_factor
         else:
             follow_factory.create(follower=search_user, following=user)
     login_user(user)
-    driver.get(live_server.url + '/search')
+    driver.get(live_server.url + '/search/')
     search_box = driver.find_element_by_css_selector('[data-test="search_field"]')
     search_box.send_keys('User')
     search_button = driver.find_element_by_css_selector('[data-test="search_user_button"]')
