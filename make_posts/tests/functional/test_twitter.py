@@ -1,7 +1,7 @@
-import shutil
 from pytest_factoryboy import register
 from make_posts.tests.factories import UserFactory, PostFactory, CommentFactory, FollowFactory, ImageFactory
 from make_posts.models import Post, Comment, Follow, User
+from selenium.webdriver.support.select import Select
 
 
 register(UserFactory)
@@ -211,14 +211,53 @@ def test_image_display_on_post(driver, live_server, post_factory, login_user, im
     assert len(images_on_post) == IMAGE_COUNT
 
 
-def test_image_upload_form(driver, live_server, user_factory, login_user):
-    user = user_factory()
+# def test_image_upload_form(driver, live_server, user_factory, login_user):
+#     user = user_factory()
+#     login_user(user)
+#     driver.get(live_server.url + f'/users/{user.pk}')
+#     image_upload_field = driver.find_element_by_css_selector('[data-test="img_upload"]')
+#     image_upload_field.send_keys('test.jpg')
+#     image_upload_field.send_keys('test2.jpg')
+#     make_post_button = driver.find_element_by_css_selector('[data-test="make-post"')
+#     make_post_button.click()
+#     assert driver.find_element_by_css_selector('[data-test="post_img_preview"]')
+#     shutil.rmtree('./make_posts')
+
+
+def test_search_for_users_to_follow(driver, live_server, user_factory, login_user):
+    user = user_factory.create()
+    RESULTS_COUNT = 20
+    for _ in range(RESULTS_COUNT):
+        user_factory.create(username=f'User{_}')
     login_user(user)
-    driver.get(live_server.url + f'/users/{user.pk}')
-    image_upload_field = driver.find_element_by_css_selector('[data-test="img_upload"]')
-    image_upload_field.send_keys('test.jpg')
-    image_upload_field.send_keys('test2.jpg')
-    make_post_button = driver.find_element_by_css_selector('[data-test="make-post"')
-    make_post_button.click()
-    assert driver.find_element_by_css_selector('[data-test="post_img_preview"]')
-    shutil.rmtree('./make_posts')
+    driver.get(live_server.url + '/search')
+    search_box = driver.find_element_by_css_selector('[data-test="search_field"]')
+    search_box.send_keys('User')
+    search_button = driver.find_element_by_css_selector('[data-test="search_user_button"]')
+    search_button.click()
+    results = driver.find_elements_by_css_selector('[data-test="search_results"]')
+    assert len(results) == RESULTS_COUNT
+
+
+def test_sort_by_most_followers(driver, live_server, user_factory, follow_factory, login_user):
+    user = user_factory.create(username='User')
+    for i in range(20):
+        search_user = user_factory.create(username=f'User{i}')
+        if i == 19:
+            second_followed_user = search_user
+            follow_factory.create(follower=user, following=second_followed_user)
+        else:
+            follow_factory.create(follower=search_user, following=user)
+    login_user(user)
+    driver.get(live_server.url + '/search')
+    search_box = driver.find_element_by_css_selector('[data-test="search_field"]')
+    search_box.send_keys('User')
+    search_button = driver.find_element_by_css_selector('[data-test="search_user_button"]')
+    select_box = Select(driver.find_element_by_css_selector('[data-test="order_results"]'))
+    select_box.select_by_visible_text('Most Followers')
+    search_button.click()
+    results = driver.find_elements_by_css_selector('[data-test="search_results"]')
+    first_user_search_result = results[0]
+    second_user_search_result = results[1]
+    assert user.username in first_user_search_result.text
+    assert second_followed_user.username in second_user_search_result.text
