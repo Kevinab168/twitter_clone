@@ -3,7 +3,6 @@ from datetime import datetime
 import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support import select
 
 
 @pytest.yield_fixture(scope="session")
