@@ -1,6 +1,7 @@
 from pytest_factoryboy import register
 from make_posts.tests.factories import UserFactory, PostFactory, CommentFactory, FollowFactory, ImageFactory
 from make_posts.models import Post, Comment, Follow, User
+import time
 
 register(UserFactory)
 register(PostFactory)
@@ -87,7 +88,7 @@ def test_see_followers(driver, live_server, login_user, user_factory, follow_fac
     followers_list = driver.find_elements_by_css_selector('[data-test="followers"]')
     followers_count = 20
     assert len(followers_list) == followers_count
-    assert 'Followers' in driver.find_element_by_css_selector('[data-test="follower-page-heading"]').text
+    assert 'followers' in driver.find_element_by_css_selector('[data-test="follower-page-heading"]').text
     last_follower = Follow.objects.all().last()
     assert last_follower.following == user
 
@@ -115,7 +116,7 @@ def test_see_following(driver, live_server, login_user, user_factory, follow_fac
     following_list = driver.find_elements_by_css_selector('[data-test="following"]')
     following_count = 20
     assert len(following_list) == following_count
-    assert 'Following' in driver.find_element_by_css_selector('[data-test="following-page-heading"]').text
+    assert 'following' in driver.find_element_by_css_selector('[data-test="following-page-heading"]').text
     last_user_followed = Follow.objects.all().last()
     assert last_user_followed.follower == user
 
@@ -207,3 +208,17 @@ def test_image_display_on_post(driver, live_server, post_factory, login_user, im
     driver.get(live_server.url + f'/posts/{post.pk}')
     images_on_post = driver.find_elements_by_css_selector('[data-test="post_img_preview"]')
     assert len(images_on_post) == IMAGE_COUNT
+
+
+def test_image_upload_form(driver, live_server, user_factory, login_user):
+    user = user_factory()
+    login_user(user)
+    driver.get(live_server.url + f'/users/{user.pk}')
+    post_content = driver.find_element_by_css_selector('[data-test="post"]')
+    post_content.send_keys('2234234')
+    image_upload_field = driver.find_element_by_css_selector('[data-test="img_upload"]')
+    image_upload_field.send_keys('test.jpg')
+    image_upload_field.send_keys('test2.jpg')
+    make_post_button = driver.find_element_by_css_selector('[data-test="make-post"')
+    make_post_button.click()
+    assert driver.find_element_by_css_selector('[data-test="post_img_preview"]')
