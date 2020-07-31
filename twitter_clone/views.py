@@ -170,7 +170,7 @@ class SearchView(FormView):
 
     def form_valid(self, form, *args, **kwargs):
         searched_query = form.cleaned_data.get('search_field')
-        ordering = self.request.POST['order_results']
+        ordering = self.request.POST.get('order_results')
         user_search_results = User.objects.filter(username__icontains=searched_query) \
             .annotate(num_followers=Count('following')) \
             .order_by(ordering)
@@ -197,8 +197,9 @@ class SearchPostView(FormView):
             return self.form_valid(form)
 
     def form_valid(self, form, *args, **kwargs):
-        searched_query = form.cleaned_data.get('search_field')
-        post_search_results = Post.objects.filter(content__icontains=searched_query)
+        searched_query = str(form.cleaned_data.get('search_field'))
+        ordering = self.request.POST.get('order_posts')
+        post_search_results = Post.objects.filter(content__icontains=searched_query).order_by(ordering)
         context = super().get_context_data(**kwargs)
         context['search'] = searched_query
         context['post_results'] = post_search_results

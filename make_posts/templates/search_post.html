@@ -4,6 +4,10 @@
 <form action="" method="POST">
     {% csrf_token %}
     {{ form }}
+    <select name="order_posts" data-test="order_posts">
+        <option value="-created_at">Newest</option>
+        <option value="created_at">Oldest</option>
+    </select>
     <input type="submit" value="Submit" data-test="search_post_button">
 </form>
 

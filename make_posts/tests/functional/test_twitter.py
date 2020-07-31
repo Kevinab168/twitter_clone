@@ -253,8 +253,8 @@ def test_sort_by_most_followers(driver, live_server, user_factory, follow_factor
     search_box = driver.find_element_by_css_selector('[data-test="search_field"]')
     search_box.send_keys('User')
     search_button = driver.find_element_by_css_selector('[data-test="search_user_button"]')
-    select_box = Select(driver.find_element_by_css_selector('[data-test="order_results"]'))
-    select_box.select_by_visible_text('Most Followers')
+    select_ordering = Select(driver.find_element_by_css_selector('[data-test="order_results"]'))
+    select_ordering.select_by_visible_text('Most Followers')
     search_button.click()
     results = driver.find_elements_by_css_selector('[data-test="search_results"]')
     first_user_search_result = results[0]
@@ -276,3 +276,21 @@ def test_search_posts_by_partial_text(driver, live_server, user_factory, post_fa
     make_search_button.click()
     results = driver.find_elements_by_css_selector('[data-test="search_post_results"]')
     assert len(results) == POST_COUNT
+
+
+def test_post_order_by_creation_date(driver, live_server, user_factory, post_factory, login_user):
+    user = user_factory.create()
+    POST_COUNT = 20
+    for i in range(POST_COUNT):
+        last_post = post_factory.create(user=user, content=f'Post {i}')
+    login_user(user)
+    driver.get(live_server.url + '/search/posts/')
+    search_box = driver.find_element_by_css_selector('[data-test="search_field"]')
+    search_box.send_keys('post')
+    make_search_button = driver.find_element_by_css_selector('[data-test="search_post_button"]')
+    select_ordering = Select(driver.find_element_by_css_selector('[data-test="order_posts"]'))
+    select_ordering.select_by_visible_text('Newest')
+    make_search_button.click()
+    results = driver.find_elements_by_css_selector('[data-test="search_post_results"]')
+    first_result = results[0]
+    assert last_post.content in first_result.text
