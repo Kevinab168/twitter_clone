@@ -230,7 +230,7 @@ def test_search_for_users_to_follow(driver, live_server, user_factory, login_use
     for _ in range(RESULTS_COUNT):
         user_factory.create(username=f'User{_}')
     login_user(user)
-    driver.get(live_server.url + '/search')
+    driver.get(live_server.url + '/search/users/')
     search_box = driver.find_element_by_css_selector('[data-test="search_field"]')
     search_box.send_keys('User')
     search_button = driver.find_element_by_css_selector('[data-test="search_user_button"]')
@@ -249,7 +249,7 @@ def test_sort_by_most_followers(driver, live_server, user_factory, follow_factor
         else:
             follow_factory.create(follower=search_user, following=user)
     login_user(user)
-    driver.get(live_server.url + '/search/')
+    driver.get(live_server.url + '/search/users/')
     search_box = driver.find_element_by_css_selector('[data-test="search_field"]')
     search_box.send_keys('User')
     search_button = driver.find_element_by_css_selector('[data-test="search_user_button"]')
@@ -294,3 +294,33 @@ def test_post_order_by_creation_date(driver, live_server, user_factory, post_fac
     results = driver.find_elements_by_css_selector('[data-test="search_post_results"]')
     first_result = results[0]
     assert last_post.content in first_result.text
+
+
+def test_check_user_search_page(driver, live_server):
+    driver.get(live_server.url + '/search/')
+    user_page = driver.find_element_by_css_selector('[data-test="search_user_page_link"]')
+    user_page.click()
+    assert '/search/users/' in driver.current_url
+
+
+def test_check_post_search_page(driver, live_server):
+    driver.get(live_server.url + '/search/')
+    post_page = driver.find_element_by_css_selector('[data-test="search_post_page_link"]')
+    post_page.click()
+    assert '/search/posts/' in driver.current_url
+
+
+def test_edit_post_button(driver, live_server, user_factory, post_factory, login_user):
+    user = user_factory.create()
+    post = post_factory.create(user=user)
+    login_user(user)
+    driver.get(live_server.url + f'/posts/{post.pk}')
+    edit_button = driver.find_element_by_css_selector('[data-test="edit_button"]')
+    edit_button.click()
+    new_post_text = driver.find_element_by_css_selector('[data-test="post"]')
+    EDITED_POST_TEXT = "Test 1"
+    new_post_text.send_keys(EDITED_POST_TEXT)
+    save_edit_button = driver.find_element_by_css_selector('[data-test="save_changes"]')
+    save_edit_button.click()
+    edited_post_in_ui = driver.find_element_by_css_selector('[data-test="created-post"]')
+    assert EDITED_POST_TEXT == edited_post_in_ui.text

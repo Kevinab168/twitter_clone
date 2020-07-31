@@ -117,6 +117,19 @@ class PostDetailView(View):
         return view(request, *args, **kwargs)
 
 
+class EditPostView(FormView):
+    template_name = 'post_edit.html'
+    form_class = PostForm
+
+    def form_valid(self, form):
+        post = Post.objects.get(pk=self.kwargs['post_id'])
+        post_text = form.cleaned_data.get('content')
+        post.content = post_text
+        post.save()
+        self.success_url = f'/posts/{self.kwargs["post_id"]}'
+        return super().form_valid(form)
+
+
 @method_decorator(login_required, name='dispatch')
 class FollowView(TemplateView):
     def get(self, request, *args, **kwargs):
@@ -157,10 +170,18 @@ class FollowingListView(ListView):
         return context
 
 
-class SearchView(FormView):
+class SearchView(TemplateView):
     template_name = 'search.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+
+class SearchUserView(FormView):
+    template_name = 'search_user.html'
     form_class = SearchForm
-    success_url = '/search'
+    success_url = '/search/users/'
 
     def post(self, request, *args, **kwargs):
         form_class = self.get_form_class()

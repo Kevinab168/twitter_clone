@@ -4,6 +4,9 @@
         <p data-test="created_date">Created: {{ post.created_at }}</p>
         <p data-test="updated_date">Updated: {{ post.updated_at }}</p>
         <p data-test="created-post">{{ post.content }}</p>
+        {% if user == post.user %}
+        <a href="{% url 'edit_post' post.pk %}" class="btn btn-primary" data-test="edit_button">Edit Post</a>
+        {% endif %}
 
         <p>Images</p>
         {% if post.images.all %}
