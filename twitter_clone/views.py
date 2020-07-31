@@ -183,3 +183,28 @@ class SearchView(FormView):
         context = super().get_context_data(**kwargs)
         context['form'] = SearchForm
         return context
+
+
+class SearchPostView(FormView):
+    template_name = 'search_post.html'
+    form_class = SearchForm
+    success_url = '/search/posts/'
+
+    def post(self, request, *args, **kwargs):
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        if form.is_valid():
+            return self.form_valid(form)
+
+    def form_valid(self, form, *args, **kwargs):
+        searched_query = form.cleaned_data.get('search_field')
+        post_search_results = Post.objects.filter(content__icontains=searched_query)
+        context = super().get_context_data(**kwargs)
+        context['search'] = searched_query
+        context['post_results'] = post_search_results
+        return self.render_to_response(context)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = SearchForm
+        return context

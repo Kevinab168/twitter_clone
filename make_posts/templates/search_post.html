@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form action="" method="POST">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit" data-test="search_post_button">
+</form>
+
+
+
+<h1>Search Results for <span>{{ search }}</span></h1>
+{% if post_results %}
+{% for result in post_results %}
+    <div>
+        <li data-test="search_post_results">{{ result.content }}</li>
+    </div>
+{% endfor %}
+{% endif %}
+{% endblock content %}

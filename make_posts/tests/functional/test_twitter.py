@@ -261,3 +261,18 @@ def test_sort_by_most_followers(driver, live_server, user_factory, follow_factor
     second_user_search_result = results[1]
     assert user.username in first_user_search_result.text
     assert second_followed_user.username in second_user_search_result.text
+
+
+def test_search_posts_by_partial_text(driver, live_server, user_factory, post_factory, login_user):
+    user = user_factory.create()
+    POST_COUNT = 20
+    for i in range(POST_COUNT):
+        post_factory.create(user=user, content=f'Post {i}')
+    login_user(user)
+    driver.get(live_server.url + '/search/posts/')
+    search_box = driver.find_element_by_css_selector('[data-test="search_field"]')
+    search_box.send_keys('post')
+    make_search_button = driver.find_element_by_css_selector('[data-test="search_post_button"]')
+    make_search_button.click()
+    results = driver.find_elements_by_css_selector('[data-test="search_post_results"]')
+    assert len(results) == POST_COUNT
