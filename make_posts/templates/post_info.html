@@ -12,6 +12,9 @@
         <p data-test="comment_creation_date">Created:  {{ comment.created_at }}</p>
         <p data-test="comment_updated_date">Updated: {{ comment.updated_at }}</p>
         <p data-test="user-comment">{{ comment.comment_content }}</p>
+        {% if user == comment.user %}
+        <a href="{% url 'edit_comment' comment.pk %}" class="btn btn-primary" data-test="edit_comment_button">Edit Comment</a>
+        {% endif %}
         
     </div>
 </div>

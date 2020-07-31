@@ -30,5 +30,6 @@ urlpatterns = [
     path('search/', views.SearchView.as_view(), name='search_page'),
     path('search/users/', views.SearchUserView.as_view(), name='search_user_page'),
     path('search/posts/', views.SearchPostView.as_view(), name='search_post_page'),
-    path('posts/<int:post_id>/edit', views.EditPostView.as_view(), name="edit_post")
+    path('posts/<int:post_id>/edit', views.EditPostView.as_view(), name='edit_post'),
+    path('posts/comments/<int:comment_id>/edit', views.EditCommentView.as_view(), name='edit_comment'),
 ]

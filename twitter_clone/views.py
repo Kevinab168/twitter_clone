@@ -118,7 +118,7 @@ class PostDetailView(View):
 
 
 class EditPostView(FormView):
-    template_name = 'post_edit.html'
+    template_name = 'edit.html'
     form_class = PostForm
 
     def form_valid(self, form):
@@ -127,6 +127,19 @@ class EditPostView(FormView):
         post.content = post_text
         post.save()
         self.success_url = f'/posts/{self.kwargs["post_id"]}'
+        return super().form_valid(form)
+
+
+class EditCommentView(FormView):
+    template_name = 'edit.html'
+    form_class = CommentForm
+
+    def form_valid(self, form):
+        comment = Comment.objects.get(pk=self.kwargs['comment_id'])
+        comment_text = form.cleaned_data.get('comment_content')
+        comment.comment_content = comment_text
+        comment.save()
+        self.success_url = f'/posts/{comment.post.pk}'
         return super().form_valid(form)
 
 

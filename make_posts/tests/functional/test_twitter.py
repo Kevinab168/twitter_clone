@@ -324,3 +324,19 @@ def test_edit_post_button(driver, live_server, user_factory, post_factory, login
     save_edit_button.click()
     edited_post_in_ui = driver.find_element_by_css_selector('[data-test="created-post"]')
     assert EDITED_POST_TEXT == edited_post_in_ui.text
+
+
+def test_edit_comment_button(driver, live_server, user_factory, comment_factory, login_user):
+    user = user_factory.create()
+    login_user(user)
+    comment = comment_factory.create(user=user)
+    driver.get(live_server.url + f'/posts/{comment.post.pk}')
+    edit_comment_button = driver.find_element_by_css_selector('[data-test="edit_comment_button"]')
+    edit_comment_button.click()
+    edit_comment_box = driver.find_element_by_css_selector('[data-test="comment-text"]')
+    EDITED_COMMENT = 'Test 1'
+    edit_comment_box.send_keys(EDITED_COMMENT)
+    save_changes_button = driver.find_element_by_css_selector('[data-test="save_changes"]')
+    save_changes_button.click()
+    edited_comment_in_ui = driver.find_element_by_css_selector('[data-test="user-comment"]')
+    assert EDITED_COMMENT == edited_comment_in_ui.text
