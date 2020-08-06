@@ -19,7 +19,10 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ['content']
         widgets = {
-            'content': forms.TextInput(attrs={'data-test': 'post', 'class': 'form-control'})
+            'content': forms.TextInput(attrs={'data-test': 'post', 
+            'class': 'form-control', 
+            'id': 'post_form'
+            })
         }
 
     def clean(self):
@@ -43,7 +46,8 @@ class ImageUploadForm(forms.ModelForm):
             'source': forms.ClearableFileInput(attrs={
                 'multiple': True,
                 'required': False,
-                'data-test': 'img_upload'
+                'data-test': 'img_upload',
+                'id': 'img_upload_form'
             })
         }
 

@@ -1,4 +1,6 @@
-from django.shortcuts import redirect, get_object_or_404
+import json
+import datetime
+from django.shortcuts import redirect, get_object_or_404, HttpResponse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.views import LoginView
 from make_posts.models import User, Post, Comment, Follow, Image
@@ -41,7 +43,7 @@ class PostListView(ListView):
 
     def get_queryset(self):
         user = get_object_or_404(User, pk=self.kwargs['user_id'])
-        return Post.objects.filter(user=user)
+        return Post.objects.filter(user=user).order_by('-created_at')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -57,6 +59,32 @@ class PostListView(ListView):
 class PostFormView(FormView):
     template_name = 'user_page.html'
     form_class = PostForm
+
+    def post(self, request, *args, **kwargs):
+    
+        if request.is_ajax():
+            post_text = self.request.POST.get('content')
+            post = Post.objects.create(content=post_text, user=self.request.user)
+            post_created_date = datetime.datetime.strftime(post.created_at, '%B-%m-%y')
+            post_updated_date = datetime.datetime.strftime(post.updated_at, '%B-%m-%y')
+            files = self.request.FILES.getlist('source')
+            images = []
+            if files:
+                for file in files:
+                    image = Image.objects.create(source=file, post=post)
+
+                    images.append(image.source.url)
+            response_dictionary = {
+                'success': True,
+                'post_pk': post.pk,
+                'post_content': post.content,
+                'created_date': post_created_date,
+                'updated_date': post_updated_date,
+                'images': images
+            }
+            return HttpResponse(json.dumps(response_dictionary))
+        else:
+            return super().post(request, *args, **kwargs)
 
     def form_valid(self, form):
         files = self.request.FILES.getlist('source')
@@ -98,6 +126,20 @@ class CommentListView(ListView):
 class CommentFormView(FormView):
     template_name = 'post_info.html'
     form_class = CommentForm
+
+    def post(self, request, *args, **kwargs):
+        post = get_object_or_404(Post, pk=self.kwargs['post_id'])
+        comment_text = self.request.POST.get('comment_content')
+        comment = Comment.objects.create(comment_content=comment_text, post=post, user=self.request.user)
+        response_dic = {
+            'success': True,
+            'comment_content': comment_text,
+            'comment_creation': str(comment.created_at),
+            'comment_updated': str(comment.updated_at),
+            'comment_pk': comment.pk,
+            'user': self.request.user.username
+        }
+        return HttpResponse(json.dumps(response_dic))
 
     def form_valid(self, form):
         self.post = get_object_or_404(Post, pk=self.kwargs['post_id'])

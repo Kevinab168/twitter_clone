@@ -203,9 +203,9 @@ def test_date_time_on_comments(
 
 def test_image_display_on_post(driver, live_server, post_factory, login_user, image_factory):
     post = post_factory.create()
-    for _ in range(3):
-        image_factory.create(post=post)
     IMAGE_COUNT = 3
+    for _ in range(IMAGE_COUNT):
+        image_factory.create(post=post)
     driver.get(live_server.url + f'/posts/{post.pk}')
     images_on_post = driver.find_elements_by_css_selector('[data-test="post_img_preview"]')
     assert len(images_on_post) == IMAGE_COUNT
