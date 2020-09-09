@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UsernameField
-from make_posts.models import Post, Comment, Image
+
+from make_posts.models import Comment, Image, Post
 
 
 class UserLoginForm(AuthenticationForm):
@@ -19,10 +20,11 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ['content']
         widgets = {
-            'content': forms.TextInput(attrs={'data-test': 'post', 
-            'class': 'form-control', 
-            'id': 'post_form'
-            })
+                'content': forms.TextInput(attrs={
+                    'data-test': 'post',
+                    'class': 'form-control',
+                    'id': 'post_form'
+                })
         }
 
     def clean(self):

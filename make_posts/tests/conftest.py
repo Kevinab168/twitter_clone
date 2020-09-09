@@ -1,8 +1,22 @@
-import pytest
-from datetime import datetime
 import os
+from datetime import datetime
+
+import pytest
+from pytest_factoryboy import register
+from rest_framework.test import APIClient
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+
+from .factories import CommentFactory, PostFactory, UserFactory
+
+register(UserFactory)
+register(PostFactory)
+register(CommentFactory)
+
+
+@pytest.fixture
+def api_client():
+    return APIClient()
 
 
 @pytest.yield_fixture(scope="session")

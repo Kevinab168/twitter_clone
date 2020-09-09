@@ -1,6 +1,7 @@
 import factory
 from factory.django import DjangoModelFactory
-from make_posts.models import User, Post, Comment, Follow, Image
+
+from make_posts.models import Comment, Follow, Image, Post, User
 
 
 class UserFactory(DjangoModelFactory):

@@ -4,14 +4,19 @@ const postContainer = document.querySelector('.post_container');
 
 document.querySelector('#create_post').addEventListener('click', (e) => {
     e.preventDefault();
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     const formDataValues = document.querySelector('#image_add_form');
     const formDataObj = new FormData(formDataValues);
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', '');
-    xhr.setRequestHeader('X-CSRFTOKEN', csrftoken);
-    xhr.send(formDataObj); 
-    xhr.onload = () => { 
-        const responseData = JSON.parse(xhr.response); 
+    fetch('', {
+        method: 'POST',
+        headers: {
+            'X-CSRFTOKEN': csrftoken
+        },
+        body: (formDataObj)
+    })
+    .then(response => (response.json()))
+    .then(data => {
+        const responseData = data;
         const cardBody = document.createElement('div');
         cardBody.setAttribute('class', 'card-body');
         const postCreatedDate = document.createElement('p');
@@ -47,6 +52,6 @@ document.querySelector('#create_post').addEventListener('click', (e) => {
         postLinkElement.setAttribute('href', `/posts/${responseData.post_pk}`);
         postLinkElement.appendChild(postCard);
         postContainer.appendChild(postLinkElement);
-    }
 
+    })
 })

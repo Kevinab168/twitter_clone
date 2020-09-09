@@ -1,15 +1,18 @@
-import json
 import datetime
-from django.shortcuts import redirect, get_object_or_404, HttpResponse
-from django.utils.decorators import method_decorator
-from django.contrib.auth.views import LoginView
-from make_posts.models import User, Post, Comment, Follow, Image
-from make_posts.forms import UserLoginForm, PostForm, CommentForm, ImageUploadForm, SearchForm
+import json
+
 from django.contrib.auth.decorators import login_required
-from django.views.generic import TemplateView, FormView
-from django.views.generic.list import ListView
-from django.views import View
+from django.contrib.auth.views import LoginView
 from django.db.models import Count
+from django.shortcuts import HttpResponse, get_object_or_404, redirect
+from django.utils.decorators import method_decorator
+from django.views import View
+from django.views.generic import FormView, TemplateView
+from django.views.generic.list import ListView
+
+from make_posts.forms import (CommentForm, ImageUploadForm, PostForm,
+                              SearchForm, UserLoginForm)
+from make_posts.models import Comment, Follow, Image, Post, User
 
 
 class HomeView(TemplateView):
@@ -61,7 +64,7 @@ class PostFormView(FormView):
     form_class = PostForm
 
     def post(self, request, *args, **kwargs):
-    
+
         if request.is_ajax():
             post_text = self.request.POST.get('content')
             post = Post.objects.create(content=post_text, user=self.request.user)
@@ -139,7 +142,7 @@ class CommentFormView(FormView):
             'comment_pk': comment.pk,
             'user': self.request.user.username
         }
-        return HttpResponse(json.dumps(response_dic))
+        return HttpResponse(json.dumps(response_dic), content_type="application/json")
 
     def form_valid(self, form):
         self.post = get_object_or_404(Post, pk=self.kwargs['post_id'])
