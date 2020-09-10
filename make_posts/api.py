@@ -46,12 +46,6 @@ class FollowViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         qs = super().get_queryset()
         qs = qs.select_related('follower', 'following')
-        # if self.request.query_params.get('follower'):
-        #     user = User.objects.get(username=self.request.query_params.get('follower'))
-        #     qs = qs.filter(follower=user)
-        # if self.request.query_params.get('following'):
-        #     user = User.objects.get(username=self.request.query_params.get('following'))
-        #     qs = qs.filter(following=user)
 
         keys = ['follower', 'following']
         username = None
