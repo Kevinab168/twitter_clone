@@ -4,6 +4,8 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.response import Response
 from rest_framework_extensions.mixins import NestedViewSetMixin
 from rest_framework_extensions.routers import ExtendedDefaultRouter
+from django_filters.rest_framework import DjangoFilterBackend
+
 
 from .models import Comment, Follow, Image, Post, User
 from .serializers import (CommentSerializer, FollowSerializerGet,
@@ -29,8 +31,9 @@ class PostViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
 class CommentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = Comment.objects.all().select_related('post', 'user').order_by('-created_at')
     serializer_class = CommentSerializer
-    filter_backends = [filters.SearchFilter]
+    filter_backends = [filters.SearchFilter, DjangoFilterBackend]
     search_fields = ['comment_content']
+    filterset_fields = ['user']
 
 
 class UserViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
@@ -48,14 +51,14 @@ class FollowViewSet(viewsets.ModelViewSet):
         qs = qs.select_related('follower', 'following')
 
         keys = ['follower', 'following']
-        username = None
+        user_id = None
         key = None
-        while keys and not username:
+        while keys and not user_id:
             key = keys.pop()
-            username = self.request.query_params.get(key)
+            user_id = self.request.query_params.get(key)
         if key:
-            username = self.request.query_params.get(key)
-            get = {key + '__username': username}
+            user_id = self.request.query_params.get(key)
+            get = {key + '__pk': user_id}
             qs = qs.filter(**get)
         return qs
 
@@ -85,7 +88,9 @@ router.register(
 ).register(
     'comments', CommentViewSet, basename='posts-comments', parents_query_lookups=['post']
 )
-router.register('api/comments', CommentViewSet)
+router.register(
+    'api/comments', CommentViewSet
+)
 
 router.register(
     'api/users', UserViewSet, basename='users'
