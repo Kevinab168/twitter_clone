@@ -2,5 +2,6 @@
     "python.pythonPath": "/mnt/c/Users/Kevin/Documents/linux_projects/twitter_clone/env/bin/python",
     "python.linting.flake8Enabled": true,
     "python.linting.enabled": true,
-    "python.envFile": "../env"
+    "python.envFile": "../env",
+    "git.ignoreLimitWarning": true
 }

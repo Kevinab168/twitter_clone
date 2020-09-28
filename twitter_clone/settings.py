@@ -26,7 +26,8 @@ SECRET_KEY = '==_dno*#r53r$ib)_ett_r)1r_u)bw6ubmor26!9mgmj%&sm-y'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '3.22.225.208'
+    '3.22.225.208',
+    'localhost'
 ]
 
 
@@ -140,7 +141,9 @@ STATICFILES_DIRS = [
 
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:8080",
-    "http://127.0.0.1:8080"
+    "http://localhost:8081",
+    "http://127.0.0.1:8080",
+    "http://pracbucketvuedeploy.s3-website-us-east-1.amazonaws.com"
 ]
 
 REST_FRAMEWORK = {
