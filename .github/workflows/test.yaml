@@ -37,5 +37,5 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
-          repository: Kevinab168/twitter_clone/backend
+          repository: kevinab168/twitter_clone/backend
           tag_with_ref: true
