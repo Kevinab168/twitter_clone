@@ -26,6 +26,7 @@ jobs:
       run: pytest
 
   push_to_registry:
+    needs: build
     name: Push Docker image to GitHub Packages
     runs-on: ubuntu-latest
     steps:
