@@ -40,3 +40,16 @@ jobs:
           registry: docker.pkg.github.com
           repository: kevinab168/twitter_clone/backend
           tag_with_ref: true
+  deploy:
+    needs: push_to_registry
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    steps:
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: whoami
