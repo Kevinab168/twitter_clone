@@ -10,9 +10,9 @@ services:
         ports: 
             - "80:80"
         volumes:
-            - /etc/nginx:/etc/nginx  
+            - /etc/nginx/:/etc/nginx/  
             - ./twitter_clone/static:/usr/share/nginx/static/
-            - /etc/letsencrypt:/etc/letsencrypt
+            - /etc/letsencrypt/:/etc/letsencrypt/
 
 
 
