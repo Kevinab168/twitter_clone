@@ -47,13 +47,17 @@ jobs:
     steps:
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
+      env:
+        DOCKER_USER: ${{ github.actor }}
+        DOCKER_PASS: ${{ secrets.GITHUB_TOKEN }}
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         script: |
-          docker-compose down 
+          docker-compose down
+          docker login https://docker.pkg.github.com -u $DOCKER_USER -p $DCOKER_PASS
           docker pull docker.pkg.github.com/kevinab168/twitter_clone/backend:latest
           docker-compose build 
           docker-compose up -d
