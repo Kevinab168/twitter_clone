@@ -52,4 +52,9 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        script: whoami
+        script: |
+        docker-compose down 
+        docker pull docker.pkg.github.com/kevinab168/twitter_clone/backend:latest
+        docker-compose build 
+        docker-compose up -d
+        

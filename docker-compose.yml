@@ -1,6 +1,6 @@
 services: 
     gunicorn:
-        build: ./twitter_clone
+        image: backend
         ports: 
             - "8000:8000"
     
@@ -10,9 +10,9 @@ services:
         ports: 
             - "80:80"
         volumes:
-            - /etc/nginx/:/etc/nginx/  
-            - ./twitter_clone/static:/usr/share/nginx/static/
-            - /etc/letsencrypt/:/etc/letsencrypt/
+            - /../nginx:/etc/nginx
+            - /etc/letsencrypt:/etc/letsencrypt
+            - ./twitter_clone/static:/usr/share/nginx/static
 
 
 
