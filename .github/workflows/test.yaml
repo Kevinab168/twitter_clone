@@ -57,7 +57,7 @@ jobs:
         port: ${{ secrets.PORT }}
         script: |
           docker-compose down
-          docker login https://docker.pkg.github.com -u $DOCKER_USER -p $DCOKER_PASS
+          docker login https://docker.pkg.github.com -u $DOCKER_USER -p $DOCKER_PASS
           docker pull docker.pkg.github.com/kevinab168/twitter_clone/backend:latest
           docker-compose build 
           docker-compose up -d
