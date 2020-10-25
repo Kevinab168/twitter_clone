@@ -1,22 +1,22 @@
 services: 
     gunicorn:
-        image: backend
+        image: docker.pkg.github.com/kevinab168/twitter_clone/backend
         ports: 
             - "8000:8000"
         volumes:
-            - backend_static: /twitter_clone/static
+            - backend_static:/twitter_clone/static
     
     nginx: 
         image: nginx
         ports: 
             - "80:80"
+            - "443:443"
         volumes:
             - /etc/nginx:/etc/nginx
             - /etc/letsencrypt:/etc/letsencrypt
-            - backend_static: /usr/share/nginx/backend_static
-    volumes: 
-        backend_static:
+            - backend_static:/usr/share/nginx/backend_static
+volumes: 
+    backend_static:
+           
 
 
-
-            

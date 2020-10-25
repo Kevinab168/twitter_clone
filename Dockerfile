@@ -5,6 +5,6 @@ RUN apt-get update && apt-get install -y libtiff5-dev libjpeg62-turbo-dev libope
 WORKDIR /twitter_clone
 COPY ./requirements.txt /twitter_clone/requirements.txt
 RUN pip install -r requirements.txt 
-CMD bash -c "python manage.py collectstatic"
 COPY . /twitter_clone
+RUN python manage.py collectstatic --noinput 
 CMD bash -c "python manage.py migrate && gunicorn twitter_clone.wsgi -b 0.0.0.0:8000"
