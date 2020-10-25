@@ -55,6 +55,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
+        envs: DOCKER_USER, DOCKER_PASS
         script: |
           docker-compose down
           docker login https://docker.pkg.github.com -u $DOCKER_USER -p $DOCKER_PASS
