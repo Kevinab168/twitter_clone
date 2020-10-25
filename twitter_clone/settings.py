@@ -139,7 +139,7 @@ AUTH_USER_MODEL = 'make_posts.User'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'make_posts/static'),
 ]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:8080",

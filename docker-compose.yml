@@ -3,16 +3,19 @@ services:
         image: backend
         ports: 
             - "8000:8000"
+        volumes:
+            - backend_static: /twitter_clone/static
     
-
     nginx: 
         image: nginx
         ports: 
             - "80:80"
         volumes:
-            - /../nginx:/etc/nginx
+            - /etc/nginx:/etc/nginx
             - /etc/letsencrypt:/etc/letsencrypt
-            - ./twitter_clone/static:/usr/share/nginx/static
+            - backend_static: /usr/share/nginx/backend_static
+    volumes: 
+        backend_static:
 
 
 
