@@ -57,8 +57,9 @@ jobs:
         port: ${{ secrets.PORT }}
         envs: DOCKER_USER, DOCKER_PASS
         script: |
-          cd ~/twitter_clone_full
+          cd ~
           docker-compose down
+          docker image prune
           docker login https://docker.pkg.github.com -u $DOCKER_USER -p $DOCKER_PASS
           docker pull docker.pkg.github.com/kevinab168/twitter_clone/backend:latest
           docker-compose build 
