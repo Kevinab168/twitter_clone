@@ -45,6 +45,18 @@ jobs:
     name: Deploy to EC2
     runs-on: ubuntu-latest
     steps:
+    - name: Check out the repo
+      uses: actions/checkout@v2
+
+    - name: copy file via ssh password
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        source: "docker-compose.yml"
+        target: "~/docker-compose.yml"
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
       env:
