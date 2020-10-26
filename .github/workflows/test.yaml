@@ -56,7 +56,7 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         source: "docker-compose.yml"
-        target: "~/docker-compose.yml"
+        target: "~"
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
       env:
