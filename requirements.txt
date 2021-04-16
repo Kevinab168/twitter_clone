@@ -4,7 +4,7 @@ backcall==0.2.0
 decorator==4.4.2
 Django==3.0.8
 django-cors-headers==3.4.0
-django-debug-toolbar==2.2
+django-debug-toolbar==2.2.1
 django-filter==2.3.0
 djangorestframework==3.11.1
 drf-extensions==0.6.0
